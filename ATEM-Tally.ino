@@ -1,26 +1,23 @@
-/*
-    This sketch establishes a TCP connection to a "quote of the day" service.
-    It sends a "hello" message, and then prints received data.
-*/
-
 #include <ESP8266WiFi.h>
 
 #ifndef STASSID
-#define STASSID "belkin.64a"
+#define STASSID "????"
 #define STAPSK  "????"
 #endif
 
 const char* ssid     = STASSID;
 const char* password = STAPSK;
 
-const char* host = "192.168.1.117";
+// Direct addressing, currently need to hardcode the ATEM's DNS name or IP address
+const char* host = "192.168.1.117"; 
 const uint16_t port = 9990;
 
 #define CAM_1_LED 16
 #define CAM_2_LED  5
 #define CAM_3_LED  4
 #define CAM_4_LED  0
-#define CAM_COUNT 4
+
+#define CAM_COUNT  4
 
 const int ledPorts[] = {
   CAM_1_LED,
@@ -29,6 +26,7 @@ const int ledPorts[] = {
   CAM_4_LED
 };
 
+// Inputs are wired to pull down when active
 #define CAM_1_TRIGGER 14
 #define CAM_2_TRIGGER 12
 #define CAM_3_TRIGGER 13
