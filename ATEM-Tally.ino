@@ -1,7 +1,7 @@
 #include <ESP8266WiFi.h>
 
 #ifndef STASSID
-#define STASSID "????"
+#define STASSID "SpecifyWiFiSSID"
 #define STAPSK  "????"
 #endif
 
@@ -27,10 +27,10 @@ const int ledPorts[] = {
 };
 
 // Inputs are wired to pull down when active
-#define CAM_1_TRIGGER 14
-#define CAM_2_TRIGGER 12
-#define CAM_3_TRIGGER 13
-#define CAM_4_TRIGGER  2
+#define CAM_1_TRIGGER  2
+#define CAM_2_TRIGGER 14
+#define CAM_3_TRIGGER 12
+#define CAM_4_TRIGGER 13
 
 const int triggerPorts[] = {
   CAM_1_TRIGGER,
@@ -190,7 +190,7 @@ void loop() {
               currentChannel = channel;
               Serial.print("Channel changed to: "); Serial.println(currentChannel);
               for (int i = 0; i < CAM_COUNT; i++) {
-                digitalWrite(ledPorts[i], (i + 1 == currentChannel) ? 0 : 1);
+                digitalWrite(ledPorts[i], (i + 1 == currentChannel) ? 1 : 0);
               }
             }
           }
