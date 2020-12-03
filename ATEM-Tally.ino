@@ -1,15 +1,15 @@
 #include <ESP8266WiFi.h>
 
 #ifndef STASSID
-#define STASSID "SpecifyWiFiSSID"
-#define STAPSK  "????"
+#define STASSID "belkin.64a"
+#define STAPSK  "threeEsevenEtwosixtwonine"
 #endif
 
 const char* ssid     = STASSID;
 const char* password = STAPSK;
 
 // Direct addressing, currently need to hardcode the ATEM's DNS name or IP address
-const char* host = "192.168.1.117"; 
+const char* host = "192.168.1.117";
 const uint16_t port = 9990;
 
 #define CAM_1_LED 16
@@ -38,6 +38,9 @@ const int triggerPorts[] = {
   CAM_3_TRIGGER,
   CAM_4_TRIGGER
 };
+
+unsigned long blink1Millis;
+unsigned long blink2Millis;
 
 void setup() {
   Serial.begin(115200);
@@ -164,9 +167,12 @@ void loop() {
       return;
     }
     status = CONNECTED;
+    blink1Millis = millis() + 1000;
+    blink2Millis = blink1Millis + 200;
   }
 
   if (status == CONNECTED) {
+    long startMillis = millis();
     // look for input lines:
     char * line = readIfLine();
     if (line != NULL) {
@@ -211,5 +217,36 @@ void loop() {
       client.println("VIDEO OUTPUT ROUTING:\n\n");
       last = now;
     }
+
+    if (now > blink1Millis) {
+      for (int i = 0; i < CAM_COUNT; i++) {
+        if (i + 1 != currentChannel) {
+          digitalWrite(ledPorts[i], 1);
+        }
+      }
+      delay(5);
+      for (int i = 0; i < CAM_COUNT; i++) {
+        if (i + 1 != currentChannel) {
+          digitalWrite(ledPorts[i], 0);
+        }
+      }
+      blink1Millis += 1000;
+    } else if (now > blink2Millis) {
+      for (int i = 0; i < CAM_COUNT; i++) {
+        if (i + 1 != currentChannel) {
+          digitalWrite(ledPorts[i], 1);
+        }
+      }
+      delay(5);
+      for (int i = 0; i < CAM_COUNT; i++) {
+        if (i + 1 != currentChannel) {
+          digitalWrite(ledPorts[i], 0);
+        }
+      }
+      blink2Millis += 1000;
+    } else {
+      delay(5);
+    }
+    delay(45); // don't need to be crazy here
   }
 }
